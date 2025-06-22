@@ -125,3 +125,9 @@ I wanted to create something more natural — something that mimics a real tour 
 - [OpenStreetMap Overpass API](https://overpass-api.de/)
 - [React Native documentation](https://reactnative.dev/docs/getting-started)
 - [AWS Bedrock documentation](https://aws.amazon.com/bedrock/)
+
+---
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
