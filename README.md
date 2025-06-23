@@ -51,6 +51,62 @@ I wanted to create something more natural — something that mimics a real tour 
 
 ---
 
+## Architecture
+
+Tourio uses a modular architecture that combines real-time location tracking, voice interfaces, and LLM-based AI responses across a React Native frontend and a FastAPI backend.
+
+The system is divided into two main layers:
+
+### 1. Frontend (Mobile App – React Native with Expo)
+
+- The app begins with an input screen for the user to enter a destination or place.
+- It fetches the user's current location using `expo-location`.
+- A live map interface (`expo-maps`) displays the user's position and nearby attractions.
+- In the background, the app polls the backend every few seconds:
+  - Calls the `/speak` endpoint with updated location data.
+  - If a new nearby attraction is detected, the backend sends an AI-generated description, which is played using `expo-speech` (Text-to-Speech).
+- Users interact with the AI guide via:
+  - Text input, or
+  - A mic button using speech-to-text.
+- Input is sent to the `/ask` endpoint, and responses are both displayed and spoken aloud.
+- The app tracks already "spoken" attractions to avoid repetition.
+
+---
+
+### 2. Backend (FastAPI)
+
+- `/attractions` – Fetches nearby tourist spots using OpenStreetMap based on user’s GPS coordinates.
+- `/explain` – Returns an AI-generated description of a specific place using the LLaMA model via Amazon Bedrock.
+- `/speak` – Checks if the user is near a new, unspoken attraction. If so:
+  - Generates a short, engaging summary.
+  - Sends it to the frontend for playback.
+  - Updates the list of spoken attractions.
+- `/ask` – Handles user questions and returns responses using the LLaMA-powered AI chat system.
+
+---
+
+### Flow Summary
+
+1. User opens the app and inputs a place.
+2. The map interface appears with nearby attractions.
+3. The app polls in the background:
+   - Detects if the user is near a new attraction.
+   - If yes, it automatically speaks about it.
+4. The user can also ask questions by typing or speaking.
+5. The app replies using AI and TTS, completing the interaction loop.
+
+---
+
+### System Architecture Diagram
+
+![Tourio System Architecture](./Architecture.png)
+
+---
+
+This architecture enables a hands-free, real-time, and context-aware tour experience, closely mimicking a human tour guide with zero buttons to press once the journey starts.
+
+---
+
 ## Challenges we ran into
 
 - Handling accurate **GPS detection** and avoiding false triggers for nearby attractions.
